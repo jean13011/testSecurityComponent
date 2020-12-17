@@ -34,14 +34,13 @@ class SecurityController extends AbstractController
      * then if the form is submitted and if its valid we encode the password, we setting it , persist it and then finally we flush it
      * to be redirect into the login view
      */
-    public function register(Request $req, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder )
+    public function register(Request $req, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
     {
         $user = new User;
         $form = $this->createForm(RegistrationType::class, $user);
 
         $form->handleRequest($req);
-         if($form->isSubmitted() && $form->isValid())
-         {
+        if ($form->isSubmitted() && $form->isValid()) {
             $hash = $encoder->encodePassword($user, $user->getPassword());
 
             $user->setPassword($hash);
@@ -49,7 +48,7 @@ class SecurityController extends AbstractController
             $manager->flush();
 
             return $this->redirectToRoute('security_login');
-         }
+        }
 
         return $this->render("security/register.html.twig", [
             "form" => $form->createView()
@@ -62,5 +61,12 @@ class SecurityController extends AbstractController
     public function login()
     {
         return $this->render("security/login.html.twig");
+    }
+
+    /**
+     * @Route("/deconnexion", name="security_logout")
+     */
+    public function logout()
+    {
     }
 }
